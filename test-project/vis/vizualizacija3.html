@@ -1,0 +1,452 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>Network | Les miserables</title>
+
+    <style type="text/css">
+        #mynetwork {
+            width: 900px;
+            height: 900px;
+            border: 1px solid lightgray;
+        }
+    </style>
+    <script type="text/javascript" src="../../test-project/vis/dist/vis.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../test-project/vis/dist/vis.css">
+
+    <script type="text/javascript">
+        function redrawAll() {
+            // create some nodes
+            var nodes = [{id:226083201297278,label:"Test Page", title: "best page",group:1},
+            {id:2065024803730443,label:"Mia Vuleti\u0107", group: 3},
+            {id:10215696009663331,label:"Katarina Vu\u010dko", group: 3},
+            {id:1807463082611435,label:"Ema Puljak", group: 3},
+            {id:10211956782414953,label:"Iva Juri\u0107", group: 5},
+            {id:1883270098350340,label:"Davor Dinjar", group: 6},
+            {id:1632822630132287,label:"Darija Vu\u010dko", group: 6},
+            {id:2035080546759050,label:"Milakovic Marina", group: 6},
+            {id:10155404920848226,label:"Marijana Puljak", group: 5},
+            {id:598608143820288,label:"Angela Jurcevic", group: 5},
+            {id:179821342214457,label:"dobartek.hr", group: 4},
+            {id:10216134919109100,label:"Ivica Puljak", group: 4},
+            {id:10213606806317520,label:"Jure Rezi\u0107", group: 4},
+            {id:10208552042118469,label:"Laura Rakuljic", group: 6},
+            {id:10215057560537328,label:"Ivana Buljan", group: 8},
+            {id:10208478232351577,label:"Nina Skelin", group: 8},
+            {id:10215923910513356,label:"Ivan Ucovic", group: 8},
+            {id:10204375272218553,label:"Luka Kre\u0161o", group: 9},
+            {id:1880353361983039,label:"Toma Puljak", group: 9},
+            {id:1532468936822069,label:"Josip Lelas", group: 2},
+            {id:1498828003499170,label:"Kate Gudelj", group: 2},
+            {id:2021046824803985,label:"Lucija \u0160o\u0161i\u0107", group: 9},
+            {id:2036257463312107,label:"Petra Tonkovi\u0107", group: 2},
+            {id:10204747861373883,label:"Borna Ivani\u0161evi\u0107", group: 10},
+            {id:10212532713887233,label:"Matej Pavlovi\u0107", group: 10},
+            {id:10211681320974038,label:"Marko Bur\u010dul", group: 10}];
+
+            // create some edges
+            var edges = [{from:2035080546759050,to:226083201297278},
+            {from:10215696009663331,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:598608143820288,to:226083201297278},
+            {from:10211956782414953,to:226083201297278},
+            {from:2065024803730443,to:226083201297278},
+            {from:1807463082611435,to:226083201297278},
+            {from:2035080546759050,to:226083201297278},
+            {from:10215696009663331,to:226083201297278},
+            {from:1632822630132287,to:226083201297278},
+            {from:10208478232351577,to:226083201297278},
+            {from:10208552042118469,to:226083201297278},
+            {from:10215057560537328,to:226083201297278},
+            {from:10213606806317520,to:226083201297278},
+            {from:10215923910513356,to:226083201297278},
+            {from:10204375272218553,to:226083201297278},
+            {from:10216134919109100,to:226083201297278},
+            {from:1880353361983039,to:226083201297278},
+            {from:2065024803730443,to:226083201297278},
+            {from:10211956782414953,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:226083201297278,to:226083201297278},
+            {from:10215696009663331,to:226083201297278},
+            {from:1632822630132287,to:226083201297278},
+            {from:1532468936822069,to:226083201297278},
+            {from:10208478232351577,to:226083201297278},
+            {from:10215057560537328,to:226083201297278},
+            {from:10208552042118469,to:226083201297278},
+            {from:10215923910513356,to:226083201297278},
+            {from:10216134919109100,to:226083201297278},
+            {from:2065024803730443,to:226083201297278},
+            {from:10211956782414953,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:226083201297278,to:226083201297278},
+            {from:1883270098350340,to:226083201297278},
+            {from:10211956782414953,to:10155404920848226},
+            {from:10208478232351577,to:10155404920848226},
+            {from:10208552042118469,to:10155404920848226},
+            {from:1807463082611435,to:10155404920848226},
+            {from:1498828003499170,to:10215057560537328},
+            {from:10215057560537328,to:10216134919109100},
+            {from:1807463082611435,to:10208552042118469},
+            {from:1498828003499170,to:2021046824803985},
+            {from:2036257463312107,to:2021046824803985},
+            {from:10208478232351577,to:2021046824803985},
+            {from:10204747861373883,to:2021046824803985},
+            {from:10215057560537328,to:2021046824803985},
+            {from:10212532713887233,to:2021046824803985},
+            {from:10215923910513356,to:2021046824803985},
+            {from:10213606806317520,to:2021046824803985},
+            {from:10208552042118469,to:10211681320974038},
+            {from:1807463082611435,to:10211681320974038},
+            {from:1807463082611435,to:10155404920848226},
+            {from:10155404920848226,to:1880353361983039},
+            {from:226083201297278,to:1880353361983039},
+            {from:10211956782414953,to:2065024803730443},
+            {from:10215057560537328,to:2065024803730443},
+            {from:10155404920848226,to:2065024803730443},
+            {from:226083201297278,to:2065024803730443},
+            {from:10155404920848226,to:10211956782414953},
+            {from:226083201297278,to:10211956782414953},
+            {from:226083201297278,to:10155404920848226},
+            {from:2065024803730443,to:226083201297278},
+            {from:10211956782414953,to:226083201297278},
+            {from:1883270098350340,to:226083201297278},
+            {from:1883270098350340,to:226083201297278},
+            {from:1883270098350340,to:226083201297278},
+            {from:1632822630132287,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:10216134919109100,to:226083201297278},
+            {from:10213606806317520,to:226083201297278},
+            {from:10208552042118469,to:226083201297278},
+            {from:10215057560537328,to:226083201297278},
+            {from:10215696009663331,to:226083201297278},
+            {from:1883270098350340,to:226083201297278},
+            {from:10216134919109100,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:10155404920848226,to:226083201297278},
+            {from:10215923910513356,to:226083201297278},
+            {from:10208552042118469,to:226083201297278},
+            {from:10208552042118469,to:226083201297278},
+            {from:10208552042118469,to:226083201297278},
+            {from:10215057560537328,to:226083201297278},
+            {from:1807463082611435,to:10155404920848226},
+            {from:10208552042118469,to:10155404920848226},
+            {from:10215057560537328,to:10215057560537328},
+            {from:1807463082611435,to:10216134919109100},
+            {from:10215057560537328,to:10208552042118469},
+            {from:1807463082611435,to:2021046824803985},
+            {from:226083201297278,to:2021046824803985},
+            {from:10213606806317520,to:2021046824803985},
+            {from:10215057560537328,to:2021046824803985},
+            {from:1807463082611435,to:10211681320974038},
+            {from:10215923910513356,to:10211681320974038},
+            {from:1807463082611435,to:10155404920848226},
+            {from:226083201297278,to:1880353361983039},
+            {from:10155404920848226,to:1880353361983039},
+            {from:10155404920848226,to:1880353361983039},
+            {from:226083201297278,to:2065024803730443},
+            {from:10215057560537328,to:2065024803730443},
+            {from:10215057560537328,to:2065024803730443},
+            {from:226083201297278,to:10211956782414953},
+            {from:226083201297278,to:10155404920848226},
+            {from:10215696009663331,to:2065024803730443},
+            {from:226083201297278,to:2065024803730443},
+            {from:10215696009663331,to:1883270098350340},
+            {from:1807463082611435,to:10213606806317520},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:1807463082611435,to:10215057560537328},
+            {from:10208552042118469,to:10208552042118469},
+            {from:1807463082611435,to:10215057560537328},
+            {from:10215057560537328,to:10215057560537328},
+            {from:10215057560537328,to:10215057560537328},
+            {from:10215057560537328,to:10215057560537328},
+            {from:10215057560537328,to:10215057560537328},
+            {from:10216134919109100,to:1807463082611435},
+            {from:10208552042118469,to:10215057560537328},
+            {from:10215057560537328,to:10215057560537328},
+            {from:10208552042118469,to:10213606806317520},
+            {from:2065024803730443,to:10215057560537328},
+            {from:2065024803730443,to:10215057560537328},
+            {from:10211956782414953,to:226083201297278},
+            {from:1807463082611435,to:10215696009663331},
+            {from:10215696009663331,to:2065024803730443},
+            {from:226083201297278,to:10211956782414953},
+            {from:10215696009663331,to:1883270098350340},
+            {from:1883270098350340,to:10215696009663331},
+            {from:1807463082611435,to:10215696009663331},
+            {from:10215696009663331,to:1883270098350340},
+            {from:10211956782414953,to:1883270098350340},
+            {from:1807463082611435,to:1883270098350340},
+            {from:1807463082611435,to:1632822630132287},
+            {from:179821342214457,to:10155404920848226},
+            {from:10216134919109100,to:10155404920848226},
+            {from:226083201297278,to:10155404920848226},
+            {from:10208552042118469,to:10213606806317520},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10216134919109100,to:10215057560537328},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10215696009663331,to:1807463082611435},
+            {from:10216134919109100,to:1807463082611435},
+            {from:10215696009663331,to:10215057560537328},
+            {from:10208552042118469,to:10215057560537328},
+            {from:10216134919109100,to:10215057560537328},
+            {from:1807463082611435,to:10215696009663331},
+            {from:10215696009663331,to:10215696009663331},
+            {from:10208552042118469,to:1883270098350340},
+            {from:1883270098350340,to:1883270098350340},
+            {from:226083201297278,to:1883270098350340},
+            {from:10208552042118469,to:10216134919109100},
+            {from:1883270098350340,to:10216134919109100},
+            {from:10155404920848226,to:10216134919109100},
+            {from:10208552042118469,to:10155404920848226},
+            {from:1883270098350340,to:10155404920848226},
+            {from:10216134919109100,to:10155404920848226},
+            {from:10208552042118469,to:10155404920848226},
+            {from:10216134919109100,to:10155404920848226},
+            {from:10208552042118469,to:10215923910513356},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10208552042118469,to:10208552042118469},
+            {from:10216134919109100,to:10208552042118469},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10216134919109100,to:10215057560537328},
+            {from:10208552042118469,to:1807463082611435},
+            {from:10211956782414953,to:10208552042118469},
+            {from:1807463082611435,to:10215057560537328},
+            {from:1807463082611435,to:10215057560537328},
+            {from:1807463082611435,to:10215057560537328},
+            {from:1807463082611435,to:10216134919109100},
+            {from:10216134919109100,to:1807463082611435},
+            {from:10215057560537328,to:10208552042118469},
+            {from:10208552042118469,to:10215057560537328},
+            {from:10208552042118469,to:10215057560537328},
+            {from:2021046824803985,to:1807463082611435},
+            {from:1807463082611435,to:1807463082611435},
+            {from:10211956782414953,to:226083201297278},
+            {from:1807463082611435,to:226083201297278},
+            {from:10213606806317520,to:10208552042118469},
+            {from:1498828003499170,to:10213606806317520},
+            {from:10208552042118469,to:10213606806317520},
+            {from:2021046824803985,to:10213606806317520},
+            {from:10215057560537328,to:10213606806317520},
+            {from:10215923910513356,to:10213606806317520},
+            {from:1807463082611435,to:10213606806317520},
+            {from:1880353361983039,to:226083201297278},
+            {from:1880353361983039,to:10155404920848226},
+            {from:10215057560537328,to:2065024803730443},
+            {from:2065024803730443,to:10215057560537328},
+            {from:226083201297278,to:10211956782414953},
+            {from:10155404920848226,to:226083201297278},
+            {from:226083201297278,to:226083201297278}];
+
+            // create a network
+            var container = document.getElementById('mynetwork');
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+            var options = {
+                nodes: {
+                    shape: 'dot',
+                    size: 16
+                },
+                physics: {
+                    forceAtlas2Based: {
+                        gravitationalConstant: -26,
+                        centralGravity: 0.005,
+                        springLength: 230,
+                        springConstant: 0.18
+                    },
+                    maxVelocity: 146,
+                    solver: 'forceAtlas2Based',
+                    timestep: 0.35,
+                    stabilization: {iterations: 150}
+                }
+            };
+            var network = new vis.Network(container, data, options);
+            network.on("click",onClick);
+
+        }
+        function onClick(selectedItems) {
+            var nodeId;
+            var degrees = 2;
+            // we get all data from the dataset once to avoid updating multiple times.
+            var allNodes = nodes.get({returnType:"Object"});
+            if (selectedItems.nodes.length == 0) {
+                // restore on unselect
+                for (nodeId in allNodes) {
+                    if (allNodes.hasOwnProperty(nodeId)) {
+                        allNodes[nodeId].color = undefined;
+                        if (allNodes[nodeId].oldLabel !== undefined) {
+                            allNodes[nodeId].label = allNodes[nodeId].oldLabel;
+                            allNodes[nodeId].oldLabel = undefined;
+                        }
+                        allNodes[nodeId]['levelOfSeperation'] = undefined;
+                        allNodes[nodeId]['inConnectionList'] = undefined;
+                    }
+                }
+            }
+            else {
+                var allEdges = edges.get();
+
+                // we clear the level of separation in all nodes.
+                clearLevelOfSeperation(allNodes);
+
+                // we will now start to collect all the connected nodes we want to highlight.
+                var connectedNodes = selectedItems.nodes;
+
+                // we can store them into levels of separation and we could then later use this to define a color per level
+                // any data can be added to a node, this is just stored in the nodeObject.
+                storeLevelOfSeperation(connectedNodes,0, allNodes);
+                for (var i = 1; i < degrees + 1; i++) {
+                    appendConnectedNodes(connectedNodes, allEdges);
+                    storeLevelOfSeperation(connectedNodes, i, allNodes);
+                }
+                for (nodeId in allNodes) {
+                    if (allNodes.hasOwnProperty(nodeId)) {
+                        if (allNodes[nodeId]['inConnectionList'] == true) {
+                            if (allNodes[nodeId]['levelOfSeperation'] !== undefined) {
+                                if (allNodes[nodeId]['levelOfSeperation'] >= 2) {
+                                    allNodes[nodeId].color = 'rgba(150,150,150,0.75)';
+                                }
+                                else {
+                                    allNodes[nodeId].color = undefined;
+                                }
+                            }
+                            else {
+                                allNodes[nodeId].color = undefined;
+                            }
+                            if (allNodes[nodeId].oldLabel !== undefined) {
+                                allNodes[nodeId].label = allNodes[nodeId].oldLabel;
+                                allNodes[nodeId].oldLabel = undefined;
+                            }
+                        }
+                        else {
+                            allNodes[nodeId].color = 'rgba(200,200,200,0.5)';
+                            if (allNodes[nodeId].oldLabel === undefined) {
+                                allNodes[nodeId].oldLabel = allNodes[nodeId].label;
+                                allNodes[nodeId].label = "";
+                            }
+                        }
+                    }
+                }
+            }
+            var updateArray = [];
+            for (nodeId in allNodes) {
+                if (allNodes.hasOwnProperty(nodeId)) {
+                    updateArray.push(allNodes[nodeId]);
+                }
+            }
+            nodes.update(updateArray);
+        }
+
+
+        /**
+         * update the allNodes object with the level of separation.
+         * Arrays are passed by reference, we do not need to return them because we are working in the same object.
+         */
+        function storeLevelOfSeperation(connectedNodes, level, allNodes) {
+            for (var i = 0; i < connectedNodes.length; i++) {
+                var nodeId = connectedNodes[i];
+                if (allNodes[nodeId]['levelOfSeperation'] === undefined) {
+                    allNodes[nodeId]['levelOfSeperation'] = level;
+                }
+                allNodes[nodeId]['inConnectionList'] = true;
+            }
+        }
+
+        function clearLevelOfSeperation(allNodes) {
+            for (var nodeId in allNodes) {
+                if (allNodes.hasOwnProperty(nodeId)) {
+                    allNodes[nodeId]['levelOfSeperation'] = undefined;
+                    allNodes[nodeId]['inConnectionList'] = undefined;
+                }
+            }
+        }
+
+        /**
+         * Add the connected nodes to the list of nodes we already have
+         *
+         *
+         */
+        function appendConnectedNodes(sourceNodes, allEdges) {
+            var tempSourceNodes = [];
+            // first we make a copy of the nodes so we do not extend the array we loop over.
+            for (var i = 0; i < sourceNodes.length; i++) {
+                tempSourceNodes.push(sourceNodes[i])
+            }
+
+            for (var i = 0; i < tempSourceNodes.length; i++) {
+                var nodeId = tempSourceNodes[i];
+                if (sourceNodes.indexOf(nodeId) == -1) {
+                    sourceNodes.push(nodeId);
+                }
+                addUnique(getConnectedNodes(nodeId, allEdges),sourceNodes);
+            }
+            tempSourceNodes = null;
+        }
+
+        /**
+         * Join two arrays without duplicates
+         * @param fromArray
+         * @param toArray
+         */
+        function addUnique(fromArray, toArray) {
+            for (var i = 0; i < fromArray.length; i++) {
+                if (toArray.indexOf(fromArray[i]) == -1) {
+                    toArray.push(fromArray[i]);
+                }
+            }
+        }
+
+        /**
+         * Get a list of nodes that are connected to the supplied nodeId with edges.
+         * @param nodeId
+         * @returns {Array}
+         */
+        function getConnectedNodes(nodeId, allEdges) {
+            var edgesArray = allEdges;
+            var connectedNodes = [];
+
+            for (var i = 0; i < edgesArray.length; i++) {
+                var edge = edgesArray[i];
+                if (edge.to == nodeId) {
+                    connectedNodes.push(edge.from);
+                }
+                else if (edge.from == nodeId) {
+                    connectedNodes.push(edge.to)
+                }
+            }
+            return connectedNodes;
+        }
+
+        redrawAll()
+    </script>
+    
+</head>
+<body onload="redrawAll()">
+    <p>
+        Relations between the characters of "Les miserables".
+    </p>
+    <div id="mynetwork"></div>
+</body>
+</html>
