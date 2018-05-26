@@ -271,6 +271,16 @@
                 },
                 edges: {
                     width: 1.0,
+                    arrows: {
+                        to: {
+                            type: 'arrow',
+                            enabled: true
+                        }
+                    },
+                    color: {
+                        color: '#606060',
+                        inherit: false
+                    },
                     scaling: {
                     min: 1,
                     max: 100
@@ -298,6 +308,11 @@
                     hideEdgesOnDrag: true
                 },
                 manipulation: { enabled: true},
+                /*layout: {
+                    hierarchical: {
+                        direction: "UD"
+                    }
+                }*/
             };
             network = new vis.Network(container, data, options);
             network.on("click",onClick);
