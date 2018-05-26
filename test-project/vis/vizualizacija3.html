@@ -15,9 +15,7 @@
     <link type="text/css" rel="stylesheet" href="../../test-project/vis/dist/vis.css">
 
     <script type="text/javascript">
-        function redrawAll() {
-            // create some nodes
-            var nodes = [{id:226083201297278,label:"Test Page", title: "best page",group:1},
+            var nodesData = [{id:226083201297278,label:"Test Page", title: "best page",group:1},
             {id:2065024803730443,label:"Mia Vuleti\u0107", group: 3},
             {id:10215696009663331,label:"Katarina Vu\u010dko", group: 3},
             {id:1807463082611435,label:"Ema Puljak", group: 3},
@@ -43,9 +41,7 @@
             {id:10204747861373883,label:"Borna Ivani\u0161evi\u0107", group: 10},
             {id:10212532713887233,label:"Matej Pavlovi\u0107", group: 10},
             {id:10211681320974038,label:"Marko Bur\u010dul", group: 10}];
-
-            // create some edges
-            var edges = [{from:2035080546759050,to:226083201297278},
+            var edgesData = [{from:2035080546759050,to:226083201297278, label: "COMMENT"},
             {from:10215696009663331,to:226083201297278},
             {from:10155404920848226,to:226083201297278},
             {from:598608143820288,to:226083201297278},
@@ -257,7 +253,11 @@
             {from:226083201297278,to:10211956782414953},
             {from:10155404920848226,to:226083201297278},
             {from:226083201297278,to:226083201297278}];
-
+            var network;
+            var allNodes;
+            var nodes = new vis.DataSet(nodesData);
+            var edges = new vis.DataSet(edgesData);
+        function redrawAll() {
             // create a network
             var container = document.getElementById('mynetwork');
             var data = {
@@ -269,6 +269,17 @@
                     shape: 'dot',
                     size: 16
                 },
+                edges: {
+                    width: 1.0,
+                    scaling: {
+                    min: 1,
+                    max: 100
+                    },
+                    smooth: {
+                        type: "dynamic"
+                    },
+                    //physics: true
+                },
                 physics: {
                     forceAtlas2Based: {
                         gravitationalConstant: -26,
@@ -279,18 +290,24 @@
                     maxVelocity: 146,
                     solver: 'forceAtlas2Based',
                     timestep: 0.35,
-                    stabilization: {iterations: 150}
-                }
+                    stabilization: {iterations: 100}
+                },
+                //smoothCurves: {dynamic: false, type: "continuous"},
+                interaction: {
+                    hover: true,
+                    hideEdgesOnDrag: true
+                },
+                manipulation: { enabled: true},
             };
-            var network = new vis.Network(container, data, options);
+            network = new vis.Network(container, data, options);
             network.on("click",onClick);
+            allNodes = nodes.get({returnType:"Object"});
 
         }
         function onClick(selectedItems) {
             var nodeId;
             var degrees = 2;
             // we get all data from the dataset once to avoid updating multiple times.
-            var allNodes = nodes.get({returnType:"Object"});
             if (selectedItems.nodes.length == 0) {
                 // restore on unselect
                 for (nodeId in allNodes) {
@@ -436,10 +453,25 @@
                     connectedNodes.push(edge.to)
                 }
             }
+            console.log(connectedNodes.length);
             return connectedNodes;
         }
 
         redrawAll()
+        window.onload = function() {
+            document.getElementById('submit').addEventListener('click', fitnetwork);
+            network.once("afterDrawing", function() {
+                network.fit({
+                    animation: {
+                        duration: 3000,
+                        easingFunction: "easeInQuad"
+                    }
+                });
+            });
+        }
+        function fitnetwork(){
+            this.network.fit({ nodes: this.nodeIDs, scale: 0.01, animation: false });
+        }
     </script>
     
 </head>
@@ -447,6 +479,9 @@
     <p>
         Relations between the characters of "Les miserables".
     </p>
+    <div>
+        <input type="button" value = "submit">
+    </div>
     <div id="mynetwork"></div>
 </body>
 </html>
