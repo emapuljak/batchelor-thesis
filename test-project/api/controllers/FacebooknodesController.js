@@ -9,8 +9,6 @@
 var out = {};
 module.exports = {
   jsonData: function(req, res) {
-    //console.log(req.body["test"]);
-    //res.json({test: "test"});
     var MongoClient = require('mongodb').MongoClient;
     var url = "mongodb://127.0.0.1:27017/";
 
@@ -37,56 +35,44 @@ module.exports = {
     //parametar type
     var type = params['type'];
     //console.log(type);
-    if(type==undefined){
+    if(type==""){
         var param1 = ["LIKE", "COMMENT", "TAG", "LOVE", "HAHA", "WOW", "SAD", "ANRGY", "THANKFUL"]
-    }
-    else if(type != undefined && typeof type == 'string'){
-        var param1=[];
-        param1[0]=type;
     }else{
         var param1 = type;
     };
-    //console.log(type);
-    //console.log(param1);
 
     //parametar numofusers
     var numofusersfrom = params['NumofUsersFrom'];
     var numofusersto = params['NumofUsersTo'];
-    if(numofusersto=="" && numofusersfrom!=""){
-        var param2from = parseInt(numofusersfrom);
-        var param2to = Number.MAX_SAFE_INTEGER;
-    }else if(numofusersfrom=="" && numofusersto!=""){
-        var param2from = 0;
-        var param2to = parseInt(numofusersto);
-    }else if(numofusersto!="" && numofusersfrom!=""){
-        var param2to = parseInt(numofusersto);
-        var param2from = parseInt(numofusersfrom);
+
+    var param2from = parseInt(numofusersfrom);
+    var param2to = parseInt(numofusersto);
+
+    if(numofusersfrom == '') {
+        param2from = 0;
     }
-    else{
-        var param2from = 0;
-        var param2to = Number.MAX_SAFE_INTEGER;
-    };
-    //console.log(numofusersfrom);
-    //console.log(numofusersto);
+
+    if(numofusersto == '') {
+        param2to = Number.MAX_SAFE_INTEGER;
+    }
 
     //parametar date
     var dateFrom = params['DateFrom'];
     var dateTo = params['DateTo'];
-    if(dateFrom == undefined && dateTo != undefined){
-        dateFrom = "1900-01-01T00:00:00+0000";
-        dateTo = dateTo.concat("+0000");
-    }else if(dateFrom!=undefined && dateTo == undefined){
-        dateFrom = dateFrom.concat("+0000");
-        dateTo = "2100-01-01T00:00:00+0000";
-    }else if(dateFrom==undefined && dateTo == undefined){
-        dateFrom = "1900-01-01T00:00:00+0000";
-        dateTo = "2100-01-01T00:00:00+0000";
-    }else if(dateFrom == "" && dateTo == ""){
-        dateFrom = "1900-01-01T00:00:00+0000";
-        dateTo = "2100-01-01T00:00:00+0000";
+
+    if(dateFrom == '') {
+        dateFrom = '1980-01-01T00:00:00+0000';
+    }else{
+        dateFrom.concat('+0000');
     }
-    //console.log(dateFrom);
-    //console.log(dateTo);
+
+    if(dateTo == '') {
+        dateTo = '2020-01-01T00:00:00+0000';
+    }else{
+        dateTo.concat('+0000');
+    }
+
+    console.log(dateFrom + " " + dateTo + " " + param2from + " " + param2to);
 
     MongoClient.connect(url, function(err, db){
         if (err) throw err;
@@ -155,7 +141,7 @@ module.exports = {
                         $replaceRoot: { newRoot: "$sources" }
                     },
                     { 
-                        $project: { _id: 0 }
+                        $project: { _id: 0}
                     }
                 ];
                 dbo.collection("edges_collection").aggregate(query2).toArray(function(err, result1) {
@@ -203,22 +189,24 @@ module.exports = {
                             db.close();
                             var nodesUnion = nodesSource.concat(nodesTarget);
                             var nodes = removeDuplicates(nodesUnion, "id");
-                            nodes.forEach(x => {
-                            x["value"] = 20;    // node size
-                            x["group"] = 8;
-                            x["title"] = x["about"];
-                            x["label"] = x["name"];
-                            x["name"] = undefined;
-                            x["about"] = undefined;
-                            });
                             var values = {};
                             values = add_values(values);
+                            var from = {};
                             edges.forEach(x=>{
                             x["to"] = x["to"];
                             x["from"] = x["from"];
                             x["value"] = values[ x["value"]];
                             x["label"] = x["value"];
                             x["title"] = undefined;
+                            //from[x["from"]]=values[ x["value"]]
+                            });
+                            nodes.forEach(x => {
+                            x["value"] = 20;
+                            x["group"] = 8;
+                            x["title"] = x["about"];
+                            x["label"] = x["name"];
+                            x["name"] = undefined;
+                            x["about"] = undefined;
                             });
                             out["nodes"] = nodes;
                             out["edges"] = edges;

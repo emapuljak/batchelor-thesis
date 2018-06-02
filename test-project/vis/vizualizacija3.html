@@ -255,6 +255,7 @@
             {from:226083201297278,to:226083201297278}];
             var network;
             var allNodes;
+            var nodeIDs = [];
             var nodes = new vis.DataSet(nodesData);
             var edges = new vis.DataSet(edgesData);
         function redrawAll() {
@@ -270,7 +271,6 @@
                     size: 16
                 },
                 edges: {
-                    width: 1.0,
                     arrows: {
                         to: {
                             type: 'arrow',
@@ -282,8 +282,8 @@
                         inherit: false
                     },
                     scaling: {
-                    min: 1,
-                    max: 100
+                        min: 1,
+                        max: 100
                     },
                     smooth: {
                         type: "dynamic"
@@ -297,7 +297,7 @@
                         springLength: 230,
                         springConstant: 0.18
                     },
-                    maxVelocity: 146,
+                    //smaxVelocity: 146,
                     solver: 'forceAtlas2Based',
                     timestep: 0.35,
                     stabilization: {iterations: 100}
@@ -305,9 +305,10 @@
                 //smoothCurves: {dynamic: false, type: "continuous"},
                 interaction: {
                     hover: true,
-                    hideEdgesOnDrag: true
+                    hideEdgesOnDrag: true,
+                    hoverConnectedEdges: true
                 },
-                manipulation: { enabled: true},
+                //manipulation: { enabled: true},
                 /*layout: {
                     hierarchical: {
                         direction: "UD"
@@ -315,10 +316,20 @@
                 }*/
             };
             network = new vis.Network(container, data, options);
-            network.on("click",onClick);
-            allNodes = nodes.get({returnType:"Object"});
+            //network.on("click",onClick);
+            //allNodes = nodes.get({returnType:"Object"});
+            this.nodes.forEach(x => {
+                this.nodeIDs.push(x.id);
+            });
+            console.log(this.nodeIDs);
 
         }
+        function fitnetwork(){
+            console.log("usla sam");
+            this.network.fit({ nodes: this.nodeIDs, scale: 0.01, animation: false });
+        }
+        
+        /*
         function onClick(selectedItems) {
             var nodeId;
             var degrees = 2;
@@ -395,7 +406,7 @@
         /**
          * update the allNodes object with the level of separation.
          * Arrays are passed by reference, we do not need to return them because we are working in the same object.
-         */
+         *
         function storeLevelOfSeperation(connectedNodes, level, allNodes) {
             for (var i = 0; i < connectedNodes.length; i++) {
                 var nodeId = connectedNodes[i];
@@ -419,7 +430,7 @@
          * Add the connected nodes to the list of nodes we already have
          *
          *
-         */
+         *
         function appendConnectedNodes(sourceNodes, allEdges) {
             var tempSourceNodes = [];
             // first we make a copy of the nodes so we do not extend the array we loop over.
@@ -441,7 +452,7 @@
          * Join two arrays without duplicates
          * @param fromArray
          * @param toArray
-         */
+         *
         function addUnique(fromArray, toArray) {
             for (var i = 0; i < fromArray.length; i++) {
                 if (toArray.indexOf(fromArray[i]) == -1) {
@@ -454,7 +465,7 @@
          * Get a list of nodes that are connected to the supplied nodeId with edges.
          * @param nodeId
          * @returns {Array}
-         */
+         *
         function getConnectedNodes(nodeId, allEdges) {
             var edgesArray = allEdges;
             var connectedNodes = [];
@@ -470,23 +481,11 @@
             }
             console.log(connectedNodes.length);
             return connectedNodes;
-        }
+        }*/
 
-        redrawAll()
-        window.onload = function() {
-            document.getElementById('submit').addEventListener('click', fitnetwork);
-            network.once("afterDrawing", function() {
-                network.fit({
-                    animation: {
-                        duration: 3000,
-                        easingFunction: "easeInQuad"
-                    }
-                });
-            });
-        }
-        function fitnetwork(){
-            this.network.fit({ nodes: this.nodeIDs, scale: 0.01, animation: false });
-        }
+        redrawAll();
+        
+        document.getElementById('submit').addEventListener('click', fitnetwork);
     </script>
     
 </head>
@@ -495,8 +494,8 @@
         Relations between the characters of "Les miserables".
     </p>
     <div>
-        <input type="button" value = "submit">
-    </div>
+        <input type="button" value="Submit" id="submit">
+    </div>    
     <div id="mynetwork"></div>
 </body>
 </html>

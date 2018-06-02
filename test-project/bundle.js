@@ -1,13 +1,9 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function (Buffer){
 var https = require('https');
 var vis = require ('vis');
 var querystring = require('querystring');
 
-/*window.onload = function() {
-    console.log("bbbbbbbbb");
-    adressRequest.write(postData);
-    adressRequest.end();
-};*/
 function add_values(values){
     values["LIKE"] = 1;
     values["WOW"] = 2;
@@ -22,63 +18,11 @@ function add_values(values){
 };
 window.onload = function() {
     document.getElementById('submit').addEventListener('click', filter);
-
-    /*var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://127.0.0.1:27017/";
-    MongoClient.connect(url, function(err, db){
-        if (err) throw err;
-        var dbo = db.db("zavrsni");
-        var query = {
-            $project: {
-                _id:0,
-                "from": "$source",
-                "to": "$target",
-                "value":"$type",
-                "title": ["$post_id","$comment_id"]
-            }
-        }
-        dbo.collection("demo_edges").aggregate(query).toArray(function(err, result) {
-            if (err) throw err;
-            var edgesData = result;
-            var values = {};
-            values = add_values(values);
-            edgesData.forEach(x=>{
-            x["to"] = x["to"];
-            x["from"] = x["from"];
-            x["value"] = values[ x["value"]];
-            x["title"] = x["title"];
-            });
-            var query1 = {
-                $project: {
-                    _id:0,
-                    "id": "$id",
-                    "name": "$name",
-                    "about": "$about"
-                }
-            }
-            dbo.collection("demo_nodes").aggregate(query1).toArray(function(err, result1){
-                if(err) throw err;
-                var nodesData = result1;
-                nodesData.forEach(x => {
-                    x["value"] = 20;    // node size
-                    x["group"] = 8;
-                    x["title"] = x["about"];
-                    x["label"] = x["name"];
-                    x["name"] = undefined;
-                    x["about"] = undefined;
-                });
-                out = {};
-                out["nodes"] = nodesData;
-                out["edges"] = edgesData;
-                test(out);
-            })
-        });
-    });*/
+    //filter();
 }
 
 function filter() {
     var elements = document.getElementById("myform").elements;
-    //console.log(elements);
 
     var obj ={};
     for(var i = 0 ; i < elements.length ; i++){
@@ -97,154 +41,144 @@ function filter() {
             obj[item.name] = item.value;
         }
     }
+
+    if(obj['type'] == undefined) {
+        obj['type'] = '';
+    }
+
     postData = obj;
-    postBody = querystring.stringify(postData);
-    //= JSON.stringify({test: "test"});
+    postBody = JSON.stringify(postData);
+    console.log(postData);
+    console.log(postBody);
+
     var options = {
         hostname: '',
         path: 'http://localhost:1337/filter',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': postBody.length
+            'Content-Type': 'application/json'
          }
     };
     var adressRequest = https.request(options, function(res){
         if(res.statusCode == '200'){
-            //console.log("gotovo");
-            res.on('data', (data) => {
-                let responsePayloadObject = JSON.parse(data);
-                let dataForApi = {};
-                //test(responsepayloadObject); --> pozovi vizualizaciju
-                for(var key in responsePayloadObject){
-                    if(key == 'nodes'){
-                        console.log("usla sam");
-                    }
-                    //     dataForApi.test = responsePayloadObject[key];
-                    //     console.log(key);
-                    // }
-                };
-            })
+            var buffers = [];
+            // res.on('data', (data) => {
+            //     console.log(data);
+            //     // let responsePayloadObject = JSON.parse(data);
+            //     let dataForApi = {};
+            //     //test(responsepayloadObject); --> pozovi vizualizaciju
+            //     for(var key in responsePayloadObject){
+            //         if(key == 'nodes'){
+            //             console.log("usla sam");
+            //             console.log(responsePayloadObject[key]);
+            //         }
+            //         //     dataForApi.test = responsePayloadObject[key];
+            //         //     console.log(key);
+            //         // }
+            //     };
+            // })
+            res
+                .on('data', (chunk) => {
+                    buffers.push(chunk);
+                })
+                .on('end', () => {
+                    test(JSON.parse(Buffer.concat(buffers).toString()));
+                })
         }
     });
-    //postData = JSON.stringify(obj);
-    //console.log(postData);
+
     adressRequest.write(postBody, function(err) { adressRequest.end() });
 };
 
-function test(result) {
-    var network;
-    var allNodes;
+var network;
 
+function test(result) {
+    document.getElementById('sub').addEventListener('click', fitnetwork);
+    document.getElementById('sub').enabled = true;
+    
+    var allNodes;
+    var nodeIDs = [];
     var nodesData = result["nodes"];
     var edgesData = result["edges"];
     //console.log(typeof(vis));
     var nodes = new vis.DataSet(nodesData);
     var edges = new vis.DataSet(edgesData);
-
+    console.log(nodes);
+    console.log(edges);
     function redrawAll() {
-            //nodes.clear();
-            //edges.clear();
-
-            //network = null;
-
-        // create a network
-
-        //nodes.add(nodesData);
-        //edges.add(edgesData);
+        var nodes = new vis.DataSet(nodesData);
+        var edges = new vis.DataSet(edgesData);
         var container = document.getElementById('mynetwork');
         var data = {
             nodes: nodes,
             edges: edges
         };
         var options = {
-            /*groups = {
-            gold: {
-                color: {
-                background: '#FFC300', //'#E5C100',
-                border: '#FFC300'
-                }
-            },
-            silver: {
-                color: {
-                background: '#002265', //'silver',
-                border: '#002265'
-                }
-            },
-            bronze: {
-                color: {
-                background: '#DB4A67', //'#d17e67',
-                border: '#DB4A67'
-                }
-            },*/
             nodes: {
-                /*borderWidth: 1,
-                font: {
-                    face: 'arial'
-                },
-                shape: 'dot',
-                radiusMin: 1000,
-                radiusMax: 3000,
-                fontSize: 12,
-                color: {
-                    border: 'red',
-                    background: 'red',
-                    hover: {
-                        border: '#2B7CE9',
-                        background: '#D2E5FF'
-                    }
-                }*/
-                shape: 'dot',
-                font: {
-                size: 12,
-                face: 'Tahoma'
-                }
+                shape: 'dot'
             },
             edges: {
-                width: 1.0,
-                inheritColor: false,
-                scaling: {
-                min: 1,
-                max: 100
-            }, 
-            },
-            /*tooltip: {
-                delay: 100,
-                size: 12,
+                arrows: {
+                    to: {
+                        type: 'arrow',
+                        enabled: true
+                    }
+                },
                 color: {
-                    background: "#fff"
-                }
-            },*/
-            smoothCurves: {dynamic: false, type: "continuous"},
-            interaction: {
-                tooltipDelay: 200,
-                hideEdgesOnDrag: true
+                    color: '#606060',
+                    inherit: false
+                },
+                scaling: {
+                    min: 1,
+                    max: 100
+                },
+                smooth: {
+                    type: "dynamic"
+                },
+                //physics: true
             },
-            /*physics: {
+            physics: {
                 forceAtlas2Based: {
                     gravitationalConstant: -26,
                     centralGravity: 0.005,
                     springLength: 230,
                     springConstant: 0.18
                 },
-                maxVelocity: 146,
+                //smaxVelocity: 146,
                 solver: 'forceAtlas2Based',
                 timestep: 0.35,
-                stabilization: {iterations: 150}
-            },*/
-            physics:{
-                    barnesHut: {gravitationalConstant: -80000, springLength: 100, springConstant: 0.001, centralGravity: 0},
-                    stabilization: false
+                stabilization: {iterations: 100}
+            },
+            //smoothCurves: {dynamic: false, type: "continuous"},
+            interaction: {
+                hover: true,
+                hideEdgesOnDrag: true,
+                hoverConnectedEdges: true
+            },
+            //manipulation: { enabled: true},
+            /*layout: {
+                hierarchical: {
+                    direction: "UD"
                 }
-
+            }*/
         };
 
-            network = new a.vis.Network(container, data, options);
-            allNodes = nodes.get({returnType:"Object"});
-            network.on("click",onClick);
+        network = new vis.Network(container, data, options);
+        //network.on("click",onClick);
+        //allNodes = nodes.get({returnType:"Object"});
+        nodesData.forEach(x => {
+            nodeIDs.push(x.id);
+        });
+        console.log(nodeIDs);
+        //console.log(this.nodeIDs);
     }
 
-
+    function fitnetwork(){
+            console.log("usla sam");
+            console.log(nodeIDs);
+            network.fit({ nodes: nodeIDs, scale: 0.01, animation: false });
+    }
+    /*
     function onClick(selectedItems) {
         var nodeId;
         var degrees = 2;
@@ -299,7 +233,7 @@ function test(result) {
                         }
                     }
                     else {
-                        allNodes[nodeId].color = 'rgba(150,150,150,0.75)';
+                        allNodes[nodeId].color = 'rgba(200,200,200,0.5)';
                         if (allNodes[nodeId].oldLabel === undefined) {
                             allNodes[nodeId].oldLabel = allNodes[nodeId].label;
                             allNodes[nodeId].label = "";
@@ -321,7 +255,7 @@ function test(result) {
     /**
      * update the allNodes object with the level of separation.
      * Arrays are passed by reference, we do not need to return them because we are working in the same object.
-     */
+     *
     function storeLevelOfSeperation(connectedNodes, level, allNodes) {
         for (var i = 0; i < connectedNodes.length; i++) {
             var nodeId = connectedNodes[i];
@@ -345,7 +279,7 @@ function test(result) {
      * Add the connected nodes to the list of nodes we already have
      *
      *
-     */
+     *
     function appendConnectedNodes(sourceNodes, allEdges) {
         var tempSourceNodes = [];
         // first we make a copy of the nodes so we do not extend the array we loop over.
@@ -367,7 +301,7 @@ function test(result) {
      * Join two arrays without duplicates
      * @param fromArray
      * @param toArray
-     */
+     *
     function addUnique(fromArray, toArray) {
         for (var i = 0; i < fromArray.length; i++) {
             if (toArray.indexOf(fromArray[i]) == -1) {
@@ -380,7 +314,7 @@ function test(result) {
      * Get a list of nodes that are connected to the supplied nodeId with edges.
      * @param nodeId
      * @returns {Array}
-     */
+     *
     function getConnectedNodes(nodeId, allEdges) {
         var edgesArray = allEdges;
         var connectedNodes = [];
@@ -394,14 +328,17 @@ function test(result) {
                 connectedNodes.push(edge.to)
             }
         }
+        console.log(connectedNodes.length);
         return connectedNodes;
-    }
+    }*/
 
     redrawAll();
 }
 
 
-},{"https":9,"querystring":19,"vis":2}],2:[function(require,module,exports){
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":5,"https":9,"querystring":19,"vis":2}],2:[function(require,module,exports){
 /**
  * vis.js
  * https://github.com/almende/vis
