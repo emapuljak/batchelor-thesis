@@ -31,7 +31,7 @@ module.exports = {
     };
 
     var params = req.body;
-    console.log(params);
+    //console.log(params);
     //parametar type
     var type = params['type'];
     //console.log(type);
@@ -61,7 +61,7 @@ module.exports = {
     var dateTo = params['DateTo'];
 
     if(dateFrom == '') {
-        dateFrom = '1980-01-01T00:00:00+0000';
+        dateFrom = '2017-05-01T00:00:00+0000';
     }else{
         dateFrom.concat('+0000');
     }
@@ -72,7 +72,7 @@ module.exports = {
         dateTo.concat('+0000');
     }
 
-    console.log(dateFrom + " " + dateTo + " " + param2from + " " + param2to);
+    //console.log(dateFrom + " " + dateTo + " " + param2from + " " + param2to);
 
     MongoClient.connect(url, function(err, db){
         if (err) throw err;
@@ -191,25 +191,27 @@ module.exports = {
                             var nodes = removeDuplicates(nodesUnion, "id");
                             var values = {};
                             values = add_values(values);
+                            //console.log(values);
                             var from = {};
                             edges.forEach(x=>{
-                            x["to"] = x["to"];
-                            x["from"] = x["from"];
-                            x["value"] = values[ x["value"]];
-                            x["label"] = x["value"];
-                            x["title"] = undefined;
-                            //from[x["from"]]=values[ x["value"]]
+                                x["to"] = x["to"];
+                                x["from"] = x["from"];
+                                x["title"] = x["value"];
+                                x["value"] = values[ x["value"]];
+                                //x["label"] = x["value"];
+                                //from[x["from"]]=values[ x["value"]]
                             });
                             nodes.forEach(x => {
-                            x["value"] = 20;
-                            x["group"] = 8;
-                            x["title"] = x["about"];
-                            x["label"] = x["name"];
-                            x["name"] = undefined;
-                            x["about"] = undefined;
+                                x["value"] = 20;
+                                x["group"] = 8;
+                                x["title"] = x["about"];
+                                x["label"] = x["name"];
+                                x["name"] = undefined;
+                                x["about"] = undefined;
                             });
                             out["nodes"] = nodes;
                             out["edges"] = edges;
+                            //console.log(out);
                             res.json(out);
                         });
                     });

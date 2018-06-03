@@ -1,17 +1,16 @@
 var https = require('https');
 var vis = require ('vis');
-var querystring = require('querystring');
 
 function add_values(values){
     values["LIKE"] = 1;
-    values["WOW"] = 2;
-    values["HAHA"] = 3;
-    values["ANRGY"] = 4;
-    values["SAD"] = 5
-    values["THANKFUL"] = 6;
-    values["LOVE"] = 7;
-    values["TAG"] = 8;
-    values["COMMENT"] = 10;
+    values["WOW"] = 1.25;
+    values["HAHA"] = 1.5;
+    values["ANRGY"] = 1.75;
+    values["SAD"] = 2;
+    values["THANKFUL"] = 2.25;
+    values["LOVE"] = 2.5;
+    values["TAG"] = 2.75;
+    values["COMMENT"] = 3;
     return values;
 };
 window.onload = function() {
@@ -46,8 +45,8 @@ function filter() {
 
     postData = obj;
     postBody = JSON.stringify(postData);
-    console.log(postData);
-    console.log(postBody);
+    //console.log(postData);
+    //console.log(postBody);
 
     var options = {
         hostname: '',
@@ -88,22 +87,21 @@ function filter() {
     adressRequest.write(postBody, function(err) { adressRequest.end() });
 };
 
-var network;
 
 function test(result) {
     document.getElementById('sub').addEventListener('click', fitnetwork);
     document.getElementById('sub').enabled = true;
-    
+    var network;
     var allNodes;
     var nodeIDs = [];
     var nodesData = result["nodes"];
     var edgesData = result["edges"];
-    
+    //console.log(result);
     var nodes = new vis.DataSet(nodesData);
     var edges = new vis.DataSet(edgesData);
+    //console.log(edges);
     function redrawAll() {
-        var nodes = new vis.DataSet(nodesData);
-        var edges = new vis.DataSet(edgesData);
+        //console.log(edges);
         var container = document.getElementById('mynetwork');
         var data = {
             nodes: nodes,
@@ -111,7 +109,15 @@ function test(result) {
         };
         var options = {
             nodes: {
-                shape: 'dot'
+                shape: 'dot',
+                scaling: {
+                    min: 100,
+                    max: 300
+                },
+                color: {                
+                    highlight: '#000099',
+                },
+                labelHighlightBold: true
             },
             edges: {
                 arrows: {
@@ -122,11 +128,12 @@ function test(result) {
                 },
                 color: {
                     color: '#606060',
-                    inherit: false
+                    inherit: false,
+                    highlight: '#000099'
                 },
                 scaling: {
                     min: 1,
-                    max: 100
+                    max: 10
                 },
                 smooth: {
                     type: "dynamic"
@@ -134,6 +141,16 @@ function test(result) {
                 //physics: true
             },
             physics: {
+                stabilization: {
+                    iterations: 1,
+                    fit: true
+                },
+                barnesHut: {
+                    gravitationalConstant: -80000,
+                    springConstant: 0.001,
+                    springLength: 200
+                }
+                /*
                 forceAtlas2Based: {
                     gravitationalConstant: -26,
                     centralGravity: 0.005,
@@ -143,7 +160,7 @@ function test(result) {
                 //smaxVelocity: 146,
                 solver: 'forceAtlas2Based',
                 timestep: 0.35,
-                stabilization: {iterations: 100}
+                stabilization: {iterations: 100}*/
             },
             //smoothCurves: {dynamic: false, type: "continuous"},
             interaction: {
@@ -151,17 +168,22 @@ function test(result) {
                 hideEdgesOnDrag: true,
                 hoverConnectedEdges: true
             },
-            //manipulation: { enabled: true},
-            /*layout: {
+            // manipulation: { 
+            //     enabled: true,
+            //     controlNodeStyle: true
+            // },
+            layout: {
+                improvedLayout: true
+                /*
                 hierarchical: {
                     direction: "UD"
-                }
-            }*/
+                }*/
+            }
         };
 
         network = new vis.Network(container, data, options);
-        //network.on("click",onClick);
-        //allNodes = nodes.get({returnType:"Object"});
+        network.on("click",onClick);
+        allNodes = nodes.get({returnType:"Object"});
         nodesData.forEach(x => {
             nodeIDs.push(x.id);
         });
@@ -169,9 +191,9 @@ function test(result) {
     }
 
     function fitnetwork(){
-            network.fit({ nodes: nodeIDs, scale: 0.01, animation: false });
+        network.fit({ nodes: nodeIDs, scale: 0.01, animation: false });
     }
-    /*
+    
     function onClick(selectedItems) {
         var nodeId;
         var degrees = 2;
@@ -248,7 +270,7 @@ function test(result) {
     /**
      * update the allNodes object with the level of separation.
      * Arrays are passed by reference, we do not need to return them because we are working in the same object.
-     *
+     */
     function storeLevelOfSeperation(connectedNodes, level, allNodes) {
         for (var i = 0; i < connectedNodes.length; i++) {
             var nodeId = connectedNodes[i];
@@ -272,7 +294,7 @@ function test(result) {
      * Add the connected nodes to the list of nodes we already have
      *
      *
-     *
+     */
     function appendConnectedNodes(sourceNodes, allEdges) {
         var tempSourceNodes = [];
         // first we make a copy of the nodes so we do not extend the array we loop over.
@@ -294,7 +316,7 @@ function test(result) {
      * Join two arrays without duplicates
      * @param fromArray
      * @param toArray
-     *
+     */
     function addUnique(fromArray, toArray) {
         for (var i = 0; i < fromArray.length; i++) {
             if (toArray.indexOf(fromArray[i]) == -1) {
@@ -307,7 +329,7 @@ function test(result) {
      * Get a list of nodes that are connected to the supplied nodeId with edges.
      * @param nodeId
      * @returns {Array}
-     *
+     */
     function getConnectedNodes(nodeId, allEdges) {
         var edgesArray = allEdges;
         var connectedNodes = [];
@@ -321,9 +343,9 @@ function test(result) {
                 connectedNodes.push(edge.to)
             }
         }
-        console.log(connectedNodes.length);
+        //console.log(connectedNodes.length);
         return connectedNodes;
-    }*/
+    }
 
     redrawAll();
 }
