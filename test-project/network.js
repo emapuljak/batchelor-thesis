@@ -109,7 +109,7 @@ function test(result) {
         };
         var options = {
             nodes: {
-                shape: 'dot',
+                shape: 'ellipse',
                 scaling: {
                     min: 100,
                     max: 300
