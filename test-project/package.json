@@ -12,12 +12,14 @@
     "fetch": "^1.1.0",
     "grunt": "1.0.1",
     "https": "^1.0.0",
+    "mongodb": "^3.0.10",
     "querystring": "^0.2.0",
     "sails": "^1.0.0",
     "sails-hook-grunt": "^3.0.2",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
-    "sails-mongo": "^1.0.0"
+    "sails-mongo": "^1.0.0",
+    "vis": "file:vis"
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3"

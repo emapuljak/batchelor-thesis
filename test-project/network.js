@@ -109,13 +109,16 @@ function test(result) {
         };
         var options = {
             nodes: {
-                shape: 'ellipse',
+                shape: 'dot',
                 scaling: {
-                    min: 100,
-                    max: 300
+                    min: 50,
+                    max: 150
                 },
                 color: {                
-                    highlight: '#000099',
+                    highlight: 'red',
+                },
+                font: {
+                    size: 20
                 },
                 labelHighlightBold: true
             },
@@ -129,7 +132,7 @@ function test(result) {
                 color: {
                     color: '#606060',
                     inherit: false,
-                    highlight: '#000099'
+                    highlight: 'red'
                 },
                 scaling: {
                     min: 1,
