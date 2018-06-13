@@ -111,14 +111,14 @@ function test(result) {
             nodes: {
                 shape: 'dot',
                 scaling: {
-                    min: 50,
-                    max: 150
+                    min: 100,
+                    max: 300
                 },
                 color: {                
-                    highlight: 'red',
+                    highlight: '#006600',
                 },
                 font: {
-                    size: 20
+                    size: 50
                 },
                 labelHighlightBold: true
             },

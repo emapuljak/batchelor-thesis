@@ -71,6 +71,7 @@ otherCheckbox.onchange = function() {
             <small>(You'll learn about the framework and explore the files that were generated in this new app.)</small>
           </p>-->
         <form id="myform">
+          <p style="font-size: 20px; font-weight: bold">Odaberi tip reakcije:</p>
           <div>
             <input type="checkbox" id="LIKE" name='type' value="LIKE">
             <label for="LIKE">LIKE</label>
@@ -85,7 +86,7 @@ otherCheckbox.onchange = function() {
           </div>
           <div>
             <input type="checkbox" id="ANGRY" name='type' value="ANRGY">
-            <label for="ANRGY">ANRGY</label>
+            <label for="ANRGY">ANGRY</label>
           </div>
           <div>
             <input type="checkbox" id="WOW" name='type' value="WOW">
@@ -107,27 +108,33 @@ otherCheckbox.onchange = function() {
             <input type="checkbox" id="TAG" name='type' value="TAG">
             <label for="TAG">TAG (tagged people)</label>
           </div>
+          <br>
           <div>
-            <input type=”text” name=NumofUsersFrom>
-            <p>Number of Users From</p>
+            <p style="font-size: 20px; font-weight: bold">Upiši broj korisnika u interakciji s objavom:</p>
+            <p>OD: </p><input type=”text” name=NumofUsersFrom>
           </div>
           <div>
-            <input type=”text” name=NumofUsersTo>
-            <p>Number of Users To: </p>
+            <p>DO: </p><input type=”text” name=NumofUsersTo>
+          </div>
+          <br>
+          <div>
+            <p style="font-size: 20px; font-weight: bold">Upiši datum i vrijeme stvaranja objave: </p>
+            <p>OD: </p><input type=”text” name=DateFrom>
           </div>
           <div>
-            <input type=”text” name=DateFrom>
-            <p>Date From: </p>
+            <p>DO: </p><input type=”text” name=DateTo>
           </div>
+          <br>
           <div>
-            <input type=”text” name=DateTo>
-            <p>Date To: </p>
+            <p style="font-size: 20px; font-weight: bold">Upiši vrstu objave (link, video, photo, status, offer): </p>
+            <input type=”text” name=postType>
           </div>
           <!--<div>
             <input type="checkbox" id="other" name='type' value="other">
             <label for="other">Other</label>
             <input type="text" id="otherValue" name="other">
           </div>-->
+          <br>
           <div>
               <input type="button" value="Submit" id="submit">
           </div>

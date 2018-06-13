@@ -72,6 +72,16 @@ module.exports = {
         dateTo.concat('+0000');
     }
 
+    var statustype = params['postType'];
+    console.log(statustype);
+    if(statustype==''){
+        status= ['photo', 'link', 'status', 'offer', 'video'];
+    }else if(typeof(statustype)=='string'){
+        status = [statustype];
+    }
+    else{
+        status = statustype;
+    }
     //console.log(dateFrom + " " + dateTo + " " + param2from + " " + param2to);
 
     MongoClient.connect(url, function(err, db){
@@ -82,7 +92,9 @@ module.exports = {
                 $match:
                     {
                         numOfUsers: { $gte: param2from , $lt: param2to },
-                        created_time: {$gte: dateFrom, $lt: dateTo }
+                        created_time: {$gte: dateFrom, $lt: dateTo },
+                        type: { $in: status }
+
                     }
             },
             { 
@@ -203,7 +215,7 @@ module.exports = {
                             });
                             nodes.forEach(x => {
                                 x["value"] = 20;
-                                x["group"] = 8;
+                                x["group"] = 5;
                                 x["title"] = x["about"];
                                 x["label"] = x["name"];
                                 x["name"] = undefined;
