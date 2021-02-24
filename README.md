@@ -1,4 +1,4 @@
-# Batchelor thesis project
+# Bachelor thesis project
 
 - Network of Facebook page users
 - Vis.js for visualization
